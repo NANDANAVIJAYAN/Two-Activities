@@ -1,5 +1,6 @@
 package com.example.twoactivities;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -27,6 +28,15 @@ public class MainActivity extends AppCompatActivity {
         mMessageEditText=findViewById(R.id.editText_main);
         mReplyHeadtextView=findViewById(R.id.text_header_reply);
         mReplyView=findViewById(R.id.text_message_reply);
+
+        if(savedInstanceState != null){
+            boolean isVisible=savedInstanceState.getBoolean("reply_visible");
+            if(isVisible){
+                mReplyHeadtextView.setVisibility(View.VISIBLE);
+                mReplyView.setText(savedInstanceState.getString("reply_text"));
+                mReplyView.setVisibility(View.VISIBLE);
+            }
+        }
     }
 
     @Override
@@ -63,6 +73,15 @@ public class MainActivity extends AppCompatActivity {
         String message=mMessageEditText.getText().toString();
         intent.putExtra(EXTRA_MESSAGE,message);
         startActivityForResult(intent, TEXT_REQUEST);
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if(mReplyHeadtextView.getVisibility()==View.VISIBLE){
+            outState.putBoolean("reply_visible",true);
+            outState.putString("reply_text",mReplyView.getText().toString());
+        }
     }
 
     @Override
